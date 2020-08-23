@@ -13,9 +13,9 @@ defmodule IneApi.IneDataWorker do
   def handle_info(:operaciones_fetch, state) do
     operaciones = ine_operaciones()
 
+    # |> Enum.into([], &Map.get(&1, "Nombre"))
     operaciones
-    |> Enum.into([], &Map.get(&1, "Nombre"))
-    |> Enum.each( &IO.inspect("#{&1}"))
+    |> Enum.each(&IO.inspect(&1))
 
     schedule_ine_fetch()
     {:noreply, operaciones}
@@ -29,6 +29,6 @@ defmodule IneApi.IneDataWorker do
   end
 
   defp schedule_ine_fetch do
-    Process.send_after(self(), :operaciones_fetch, 15_000)
+    Process.send_after(self(), :operaciones_fetch, 60_000 * 60)
   end
 end
