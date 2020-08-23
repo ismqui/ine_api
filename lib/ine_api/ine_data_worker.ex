@@ -14,6 +14,7 @@ defmodule IneApi.IneDataWorker do
     operaciones = ine_operaciones()
 
     operaciones
+    |> Enum.into([], &Map.get(&1, "Nombre"))
     |> Enum.each( &IO.inspect("#{&1}"))
 
     schedule_ine_fetch()
@@ -25,7 +26,6 @@ defmodule IneApi.IneDataWorker do
     |> HTTPoison.get!()
     |> Map.get(:body)
     |> Jason.decode!()
-    |> Enum.into([], &Map.get(&1, "Nombre"))
   end
 
   defp schedule_ine_fetch do
